@@ -68,26 +68,9 @@ class ZMusicBox extends PluginBase implements Listener{
 		}
 		$this->getServer()->getScheduler()->scheduleRepeatingTask(new CallbackTask([$this,
 		"Run"]),1 * 20 / $this->song->get("tick"));
-		//$this->getServer()->getScheduler()->scheduleRepeatingTask(new CallbackTask([$this,
-		//"test"]),5);
 		$this->p = "";
 		$this->getLogger()->info("Loaded!!!!!");
 	}
-
-	public function test(){
-		var_dump($this->t);
-		$this->t = $this->t + 1;
-		$pk = new LevelEventPacket;	
-		$pk->evid = $this->t;
-		$pk->data = 0;
-		foreach($this->getServer()->getOnlinePlayers() as $p){
-			$pk->x = $p->getX();
-			$pk->y = $p->getY();
-			$pk->z = $p->getZ();
-			$p->dataPacket($pk);
-		}	
-	}
-	
 	
 	public function getPluginDir(){
 		return $this->getServer()->getDataPath()."plugins/songs/";
@@ -127,7 +110,6 @@ class ZMusicBox extends PluginBase implements Listener{
 			$p->dataPacket($pk);
 		}
 	}
-	
 	
 	public function Play($aound){
 			switch($aound){
@@ -245,30 +227,15 @@ class ZMusicBox extends PluginBase implements Listener{
 	}
 	
 	public function onCommand(CommandSender $sender, Command $command, $label, array $args){
-		if(isset($args[0])){
-		
-			//var_dump($args[0]);
-		$pk = new LevelEventPacket;	
-		$pk->evid = $args[0];
-		$pk->data = $args[1];
-		foreach($this->getServer()->getOnlinePlayers() as $p){
-			$pk->x = $p->getX();
-			$pk->y = $p->getY();
-			$pk->z = $p->getZ();
-			$p->dataPacket($pk);
-		}
-		
+		if($this->switchr == false){
+			$this->switchr = true;
 		}else{
-			if($this->switchr == false){
-				$this->switchr = true;
-			}else{
-				$this->switchr = false;
-			}
+			$this->switchr = false;
 		}
 	}
 		
 	public function onDisable(){
-		$this->getLogger()->info("RainyDays Unload Success!");
+		$this->getLogger()->info("ZMusicBox Unload Success!");
 	}
 	
 }
