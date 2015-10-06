@@ -5,5 +5,5 @@ Never Sell it or use the codes inside to sell money!
 
 
 -
-- Commands:
+Commands:
 - /music  open/close music

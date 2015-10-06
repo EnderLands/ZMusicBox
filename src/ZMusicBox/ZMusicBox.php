@@ -80,8 +80,6 @@ class ZMusicBox extends PluginBase implements Listener{
 		if($this->switchr == true){
 			if($this->p == $this->song->get("opern")){
 				$this->p = "";
-			}
-			if($this->song->exists("opern1") and $this->p1 == $this->song->get("opern1")){
 				$this->p1 = "";
 			}
 			$hasplayed = strlen($this->p);
@@ -89,7 +87,7 @@ class ZMusicBox extends PluginBase implements Listener{
 			$shouldplay = substr($hasnotplayed,0,1);
 			$this->p = $this->p.$shouldplay;
 			$this->Play($shouldplay);
-			if($this->song->exists("opern1")){
+			if($this->song->exists("opern1") and $this->p1 != $this->song->get("opern1")){
 				$hasplayed = strlen($this->p1);
 				$hasnotplayed = substr($this->song->get("opern1"),$hasplayed);
 				$shouldplay = substr($hasnotplayed,0,1);
