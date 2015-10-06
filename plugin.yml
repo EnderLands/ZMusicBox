@@ -1,0 +1,17 @@
+name: ZMusicBox
+version: 1.2.0
+api: [1.0.0]
+author: Zzm
+description: Music~~
+main: ZMusicBox\ZMusicBox
+
+commands:
+  music:
+    description: "Open/Close Music"
+    permission:  ZMusicBox.command
+permissions:
+  ZMusicBox:
+    default: op
+    children:
+       ZMusicBox.command:
+        default: op
