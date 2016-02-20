@@ -1,9 +1,9 @@
 # ZMusicBox
-For PM1.6~ Just play music in your server~
+Just play music in your server~
 
 Never Sell it or use the codes inside to sell money!
 
-
--
-Commands:
-- /music  open/close music
+Tips:
+1 2 3 4 5 6 7 8
+[1 [2 [3 [4 [5 [6 [7 [8
+]1 ]2 ]3 ]4 ]5 ]6 ]7 ]8
