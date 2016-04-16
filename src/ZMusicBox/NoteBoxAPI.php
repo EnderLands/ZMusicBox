@@ -1,5 +1,4 @@
 <?php
-
 namespace ZMusicBox;
 
 class NoteBoxAPI{
