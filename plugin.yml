@@ -1,6 +1,22 @@
 name: ZMusicBox
-version: 2.2.0
+version: 2.5.0
 api: [1.0.0]
-author: Zzm317
+author: Zzm
 description: Music~~
 main: ZMusicBox\ZMusicBox
+
+commands:
+ music:
+  permission: ZMusicBox.music
+  description: ZMusicBox's main command
+  usage: /music <Next>
+
+permissions:
+ ALLSurvival:
+  default: op
+  description: ZMusicBox Commands
+  children:
+     ZMusicBox.music:
+      default: op
+      description: ZMusicBox Commands
+    
