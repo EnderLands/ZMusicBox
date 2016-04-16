@@ -1,6 +1,9 @@
 <?php
 
 namespace ZMusicBox;
+use pocketmine\command\Command;
+use pocketmine\command\CommandExecutor;
+use pocketmine\command\CommandSender;
 use pocketmine\plugin\PluginBase;
 use pocketmine\event\Listener;
 use pocketmine\level;
@@ -15,25 +18,54 @@ use pocketmine\math\Vector3;
 use pocketmine\math\Math;
 use pocketmine\level\format\Chunk;
 use pocketmine\level\format\FullChunk;
+use pocketmine\utils\BinaryStream;
+use pocketmine\utils\Binary;
+use ZMusicBox\NoteBoxAPI;
 
 class ZMusicBox extends PluginBase implements Listener{
 	public $song;
 	public $MusicPlayer;
-	public $opern;
+	public $name;
 	
 	public function onEnable(){
-		$this->getLogger()->info("ZMusicBox Is Loading!");
-		$this->getServer()->getPluginManager()->registerEvents($this, $this);	
+		$this->getLogger()->info("ZMusicBox is loading!");
+		$this->getServer()->getPluginManager()->registerEvents($this, $this);
 		if(!is_dir($this->getPluginDir())){
 			@mkdir($this->getServer()->getDataPath()."plugins/songs");
 		}
 		$this->getServer()->getPluginManager()->registerEvents($this,$this);
-		$this->song = $this->getRandomMusic();
-		$this->opern = $this->song->get("opern");
-		$this->MusicPlayer = new MusicPlayer($this);
-		$this->getServer()->getScheduler()->scheduleRepeatingTask($this->MusicPlayer, 20 / $this->song->get("tick"));
-		$this->getLogger()->info("ZMusicBox Loaded!!!!!");
+		if(!$this->CheckMusic()){
+			$this->getLogger()->info("§bPlease put in nbs files!!!");
+		}else{
+			$this->StartNewTask();
+		}
+		$this->getLogger()->info("ZMusicBox loaded!!!!!");
 	} 
+
+	public function onCommand(CommandSender $sender, Command $cmd, $label, array $args) {
+		switch($cmd->getName()) {
+			case "music":
+				if(isset($args[0])){
+					switch($args[0]){
+						case "next":
+							$this->StartNewTask();
+							$sender->sendMessage(TextFormat::GREEN."Switched to next song");
+							return true;
+							break;
+					}
+				}else{
+					$sender->sendMessage(TextFormat::RED."Usage:/music <next>");
+				}
+			break;		
+		}
+	}
+	
+	public function CheckMusic(){
+		if($this->getDirCount($this->getPluginDir()) > 0 and $this->RandomFile($this->getPluginDir(),"nbs")){
+			return true;
+		}
+		return false;
+	}
 	
 	public function getDirCount($PATH){
       $num = sizeof(scandir($PATH));
@@ -46,7 +78,42 @@ class ZMusicBox extends PluginBase implements Listener{
 	}
 	
 	public function getRandomMusic(){
-		return new Config($this->getPluginDir().mt_rand(1,$this->getDirCount($this->getPluginDir())).".yml", Config::YAML, array());
+		$dir = $this->RandomFile($this->getPluginDir(),"nbs");
+		if($dir){
+			$api = new NoteBoxAPI($this,$dir);
+			return $api;
+		}
+		return false;
+	}
+	
+	Public function RandomFile($folder='', $extensions='.*'){
+		$folder = trim($folder);
+		$folder = ($folder == '') ? './' : $folder;
+		if (!is_dir($folder)){
+			return false;
+		}
+		$files = array();
+		if ($dir = @opendir($folder)){
+			while($file = readdir($dir)){
+				if (!preg_match('/^\.+$/', $file) and
+					preg_match('/\.('.$extensions.')$/', $file)){
+					$files[] = $file;        
+				}      
+			}   
+			closedir($dir);  
+		}else{
+			return false;
+		}
+		if (count($files) == 0){
+			return false;
+		}
+		mt_srand((double)microtime()*1000000);
+		$rand = mt_rand(0, count($files)-1);
+		if (!isset($files[$rand])){
+			return false;
+		}
+		$this->name = str_replace('.nbs', '', $files[$rand]);
+		return $folder . $files[$rand];
 	}
 	
 	public function getNearbyNoteBlock($x,$y,$z,$world){
@@ -55,8 +122,8 @@ class ZMusicBox extends PluginBase implements Listener{
         $maxX = $x + 5;	
         $minY = $y - 5;
         $maxY = $y + 5;
-        $minZ = $z - 5;
-        $maxZ = $z + 5;
+        $minZ = $z - 2;
+        $maxZ = $z + 2;
         
         for($x = $minX; $x <= $maxX; ++$x){
 			for($y = $minY; $y <= $maxY; ++$y){
@@ -76,26 +143,30 @@ class ZMusicBox extends PluginBase implements Listener{
 		return $level->getChunk($x >> 4, $z >> 4, false)->getFullBlock($x & 0x0f, $y & 0x7f, $z & 0x0f);
 	}
   
-	public function Play($sound,$ins = null){
+	public function Play($sound,$type = 0){
 		foreach($this->getServer()->getOnlinePlayers() as $p){
 			$noteblock = $this->getNearbyNoteBlock($p->x,$p->y,$p->z,$p->getLevel());
 			if(!empty($noteblock)){
-				$p->sendPopup("§b|->§6Now Playing§a:".$this->song->get("name")."§b<-|");
-				foreach($noteblock as $block){
-					$pk = new BlockEventPacket();
-					$pk->x = $block->x;
-					$pk->y = $block->y;
-					$pk->z = $block->z;
-					$pk->case1 = $this->song->get("instrument");
-					if(!$ins and is_numeric($sound) and $sound > 0){//0 1 2 3 4 5 6 7
-						$pk->case2 = $sound - 1;
-						$p->dataPacket($pk);
-					}elseif($ins == "["){//8 9 10 11 12 13 14 15
-						$pk->case2 = $sound + 8 - 1;
-						$p->dataPacket($pk);
-					}elseif($ins == "]"){//16 17 18 19 20 21 22 23
-						$pk->case2 = $sound + 16 - 1;
-						$p->dataPacket($pk);
+				if($this->song->name != ""){
+					$p->sendPopup("§b|->§6Now Playing: §a".$this->song->name."§b<-|");
+				}else{	
+					$p->sendPopup("§b|->§6Now Playing: §a".$this->name."§b<-|");
+				}
+				$i = 0;
+				while ($i <= 3){
+					$i ++;
+					$block = current($noteblock);
+					next($noteblock);
+					if($block){
+						$pk = new BlockEventPacket();
+						$pk->x = $block->x;
+						$pk->y = $block->y;
+						$pk->z = $block->z;
+						$pk->case1 = $type;
+						if(is_numeric($sound) and $sound > 0){
+							$pk->case2 = $sound;
+							$p->dataPacket($pk);
+						}
 					}
 				}
 			}
@@ -108,10 +179,9 @@ class ZMusicBox extends PluginBase implements Listener{
 	
 	public function StartNewTask(){
 		$this->song = $this->getRandomMusic();
-		$this->opern = "";
 		$this->getServer()->getScheduler()->cancelTasks($this);
 		$this->MusicPlayer = new MusicPlayer($this);
-		$this->getServer()->getScheduler()->scheduleRepeatingTask($this->MusicPlayer, 20 / $this->song->get("tick"));
+		$this->getServer()->getScheduler()->scheduleRepeatingTask($this->MusicPlayer, 2000 / $this->song->speed );
 	}
 	
 }
@@ -124,22 +194,15 @@ class MusicPlayer extends PluginTask{
     }
 	
 	public function onRun($CT){
-			if(($this->plugin->opern == $this->plugin->song->get("opern")) or (strlen($this->plugin->opern) >= strlen($this->plugin->song->get("opern")))){
-				$this->plugin->StartNewTask();
+		if(isset($this->plugin->song->sounds[$this->plugin->song->tick])){
+			foreach($this->plugin->song->sounds[$this->plugin->song->tick] as $data){
+				$this->plugin->Play(...$data);
 			}
-			$hasplayed = strlen($this->plugin->opern);
-			$hasnotplayed = substr($this->plugin->song->get("opern"),$hasplayed);
-			$shouldplay = substr($hasnotplayed,0,1);
-			$this->plugin->opern = $this->plugin->opern.$shouldplay;
-			if($shouldplay == "[" or $shouldplay == "]"){
-				$hasplayed = strlen($this->plugin->opern);
-				$hasnotplayed = substr($this->plugin->song->get("opern"),$hasplayed);
-				$nshouldplay = substr($hasnotplayed,0,1);
-				$this->plugin->opern = $this->plugin->opern.$nshouldplay;
-				$this->plugin->Play($nshouldplay,$shouldplay);
-			}else{
-				$this->plugin->Play($shouldplay);
-			}
+		}
+		$this->plugin->song->tick++;
+		if($this->plugin->song->tick > $this->plugin->song->length){
+			$this->plugin->StartNewTask();
+		}
 	}
 
 }
