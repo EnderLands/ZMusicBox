@@ -52,6 +52,26 @@ class ZMusicBox extends PluginBase implements Listener{
 							$sender->sendMessage(TextFormat::GREEN."Switched to next song");
 							return true;
 							break;
+						case "stop":
+							if($sender->isOp()){
+								$this->getServer()->getScheduler()->cancelTasks($this);
+								$sender->sendMessage(TextFormat::GREEN."Song Stopped");
+								return true;
+							}else{
+								$sender->sendMessage(TextFormat::RED."No Permission");
+								return true;
+							}
+							break;	
+						case "start":
+							if($sender->isOp()){
+								$this->StartNewTask();
+								$sender->sendMessage(TextFormat::GREEN."Song Started");
+								return true;
+								break;	
+							}else{
+								$sender->sendMessage(TextFormat::RED."No Permission");
+								return true;
+							}	
 					}
 				}else{
 					$sender->sendMessage(TextFormat::RED."Usage:/music <next>");
@@ -112,7 +132,7 @@ class ZMusicBox extends PluginBase implements Listener{
 		if (!isset($files[$rand])){
 			return false;
 		}
-		$this->name = str_replace('.nbs', '', $files[$rand]);
+		$this->name = str_replace('.nbs', '', iconv('gbk','UTF-8',$files[$rand]));
 		return $folder . $files[$rand];
 	}
 	
@@ -143,30 +163,36 @@ class ZMusicBox extends PluginBase implements Listener{
 		return $level->getChunk($x >> 4, $z >> 4, false)->getFullBlock($x & 0x0f, $y & 0x7f, $z & 0x0f);
 	}
   
-	public function Play($sound,$type = 0){
-		foreach($this->getServer()->getOnlinePlayers() as $p){
-			$noteblock = $this->getNearbyNoteBlock($p->x,$p->y,$p->z,$p->getLevel());
-			if(!empty($noteblock)){
-				if($this->song->name != ""){
-					$p->sendPopup("§b|->§6Now Playing: §a".$this->song->name."§b<-|");
-				}else{	
-					$p->sendPopup("§b|->§6Now Playing: §a".$this->name."§b<-|");
-				}
-				$i = 0;
-				while ($i <= 3){
-					$i ++;
+	public function Play($sound,$type = 0,$blo = 0){
+		if(is_numeric($sound) and $sound > 0){
+			foreach($this->getServer()->getOnlinePlayers() as $p){
+				$noteblock = $this->getNearbyNoteBlock($p->x,$p->y,$p->z,$p->getLevel());
+				$noteblock1 = $noteblock;
+				if(!empty($noteblock)){
+					if($this->song->name != ""){
+						$p->sendPopup("§b|->§6Now Playing: §a".$this->song->name."§b<-|");
+					}else{	
+						$p->sendPopup("§b|->§6Now Playing: §a".$this->name."§b<-|");
+					}
+					$i = 0;
+					while ($i < $blo){
+						if(current($noteblock)){
+							next($noteblock);
+							$i ++;
+						}else{
+							$noteblock = $noteblock1;
+							$i ++;
+						}
+					}
 					$block = current($noteblock);
-					next($noteblock);
 					if($block){
 						$pk = new BlockEventPacket();
 						$pk->x = $block->x;
 						$pk->y = $block->y;
 						$pk->z = $block->z;
 						$pk->case1 = $type;
-						if(is_numeric($sound) and $sound > 0){
-							$pk->case2 = $sound;
-							$p->dataPacket($pk);
-						}
+						$pk->case2 = $sound;
+						$p->dataPacket($pk);
 					}
 				}
 			}
@@ -181,7 +207,7 @@ class ZMusicBox extends PluginBase implements Listener{
 		$this->song = $this->getRandomMusic();
 		$this->getServer()->getScheduler()->cancelTasks($this);
 		$this->MusicPlayer = new MusicPlayer($this);
-		$this->getServer()->getScheduler()->scheduleRepeatingTask($this->MusicPlayer, 2000 / $this->song->speed );
+		$this->getServer()->getScheduler()->scheduleRepeatingTask($this->MusicPlayer, 3000 / $this->song->speed );
 	}
 	
 }
@@ -195,8 +221,10 @@ class MusicPlayer extends PluginTask{
 	
 	public function onRun($CT){
 		if(isset($this->plugin->song->sounds[$this->plugin->song->tick])){
+			$i = 0;
 			foreach($this->plugin->song->sounds[$this->plugin->song->tick] as $data){
-				$this->plugin->Play(...$data);
+				$this->plugin->Play($data[0],$data[1],$i);
+				$i++;
 			}
 		}
 		$this->plugin->song->tick++;
