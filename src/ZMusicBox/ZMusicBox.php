@@ -72,7 +72,7 @@ class ZMusicBox extends PluginBase implements Listener{
 							break;	
 					}
 				}else{
-					$sender->sendMessage(TextFormat::RED."Usage:/music <next>");
+					$sender->sendMessage(TextFormat::RED."Usage:/music <start|stop|next>");
 				}
 			break;		
 		}
