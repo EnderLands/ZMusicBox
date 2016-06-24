@@ -56,22 +56,20 @@ class ZMusicBox extends PluginBase implements Listener{
 							if($sender->isOp()){
 								$this->getServer()->getScheduler()->cancelTasks($this);
 								$sender->sendMessage(TextFormat::GREEN."Song Stopped");
-								return true;
 							}else{
 								$sender->sendMessage(TextFormat::RED."No Permission");
-								return true;
 							}
+							return true;
 							break;	
 						case "start":
 							if($sender->isOp()){
 								$this->StartNewTask();
 								$sender->sendMessage(TextFormat::GREEN."Song Started");
-								return true;
-								break;	
 							}else{
 								$sender->sendMessage(TextFormat::RED."No Permission");
-								return true;
-							}	
+							}
+							return true;
+							break;	
 					}
 				}else{
 					$sender->sendMessage(TextFormat::RED."Usage:/music <next>");
