@@ -12,7 +12,7 @@ commands:
   usage: /music <Next>
 
 permissions:
- ALLSurvival:
+ ZMusicBox:
   default: op
   description: ZMusicBox Commands
   children:
