@@ -2,6 +2,8 @@
 -Just play music in your server~
 -PS:you need to put a noteblock first!
 
+-Usage:/music <start|stop|next>
+
 请不要将内部的代码和算法使用到其他到闭源/收费插件中！
 
 
