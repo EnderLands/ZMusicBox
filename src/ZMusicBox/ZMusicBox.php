@@ -86,9 +86,9 @@ class ZMusicBox extends PluginBase implements Listener{
 	}
 	
 	public function getDirCount($PATH){
-      $num = sizeof(scandir($PATH));
-      $num = ($num>2)?$num-2:0;
-	  return $num;
+      		$num = sizeof(scandir($PATH));
+      		$num = ($num>2)?$num-2:0;
+		return $num;
 	}
 	
 	public function getPluginDir(){
@@ -130,7 +130,12 @@ class ZMusicBox extends PluginBase implements Listener{
 		if (!isset($files[$rand])){
 			return false;
 		}
-		$this->name = str_replace('.nbs', '', iconv('gbk','UTF-8',$files[$rand]));
+		if(function_exists("iconv")){
+			$rname = iconv('gbk','UTF-8',$files[$rand]);
+		}else{
+			$rname = $files[$rand];
+		}
+		$this->name = str_replace('.nbs', '', $rname);
 		return $folder . $files[$rand];
 	}
 	
