@@ -12,6 +12,7 @@ use pocketmine\scheduler\PluginTask;
 use pocketmine\utils\Config;
 use pocketmine\utils\TextFormat;
 use pocketmine\network\protocol\BlockEventPacket;
+use pocketmine\network\protocol\LevelSoundEventPacket;
 use pocketmine\Player;
 use pocketmine\math\AxisAlignedBB;
 use pocketmine\math\Vector3;
@@ -195,6 +196,16 @@ class ZMusicBox extends PluginBase implements Listener{
 						$pk->z = $block->z;
 						$pk->case1 = $type;
 						$pk->case2 = $sound;
+						$p->dataPacket($pk);
+						$pk = new LevelSoundEventPacket();
+						$pk->sound = 64;
+						$pk->x = $block->x;
+						$pk->y = $block->y;
+						$pk->z = $block->z;
+						$pk->volume = $type;
+						$pk->pitch = $sound;
+						$pk->unknownBool = true;
+						$pk->unknownBool2 = true;
 						$p->dataPacket($pk);
 					}
 				}
