@@ -1,18 +1,19 @@
 # ZMusicBox
 Just play music in your server~
 
-Requirements:
+
+_Requirements:_
 
 The server software you use must play the noteblock sound when you tap it
 
 
-How to use:
+_How to use:_
 
 1) You have to add .nbs files in the songs folder inside your plugins folder
 2) Place a noteblock
 
 
-Commands:
+_Commands:_
 
 /music <start|stop|next>
 
@@ -24,7 +25,8 @@ $this->ZMusicBox->StartNewTask();   -   Switch to the Next Song
 $this->getServer()->ZMusicBox->getScheduler()->cancelTasks($this);   -   Stop the Music
 
 
-Tips:
+_Tips:_
+
 You should use Minecraft Note Block Studio to change midi files into nbs files.
 Website: http://www.stuffbydavid.com/mcnbs
 
