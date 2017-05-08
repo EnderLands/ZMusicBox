@@ -1,15 +1,15 @@
 name: ZMusicBox
-version: 2.5.0
-api: [1.0.0]
+version: 2.6.0
+api: [1.0.0, 2.0.0, 2.1.0, 3.0.0, 3.0.1, 4.0.0]
 author: Zzm
-description: Music~~
+description: Play music in your server
 main: ZMusicBox\ZMusicBox
 
 commands:
  music:
   permission: ZMusicBox.music
-  description: ZMusicBox's main command
-  usage: /music <Next>
+  description: Manage the music in your server
+  usage: /music <start|stop|next>
 
 permissions:
  ZMusicBox:
