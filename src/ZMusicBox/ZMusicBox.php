@@ -198,7 +198,7 @@ class ZMusicBox extends PluginBase implements Listener{
 						$pk->case2 = $sound;
 						$p->dataPacket($pk);
 						$pk = new LevelSoundEventPacket();
-						$pk->sound = 64;
+						$pk->sound = LevelSoundEventPacket::SOUND_NOTE;
 						$pk->x = $block->x;
 						$pk->y = $block->y;
 						$pk->z = $block->z;
