@@ -18,7 +18,7 @@ _Commands:_
 /music <start|stop|next>
 
 
-ZMusicBox is also accessible from it's API:
+ZMusicBox is also accessible from its API:
 
 $this->ZMusicBox->StartNewTask();   -   Switch to the Next Song
 
@@ -27,7 +27,7 @@ $this->getServer()->ZMusicBox->getScheduler()->cancelTasks($this);   -   Stop 
 
 _Tips:_
 
-You should use Minecraft Note Block Studio to change midi files into nbs files.
+You should use Minecraft Note Block Studio to convert midi files into nbs files.
 Website: http://www.stuffbydavid.com/mcnbs
 
 
