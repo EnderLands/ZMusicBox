@@ -43,7 +43,7 @@ class ZMusicBox extends PluginBase implements Listener{
 		$this->getLogger()->info("ZMusicBox loaded!!!!!");
 	} 
 
-	public function onCommand(CommandSender $sender, Command $cmd, $label, array $args) {
+	public function onCommand(CommandSender $sender, Command $cmd, string $label, array $args) : bool{
 		switch($cmd->getName()) {
 			case "music":
 				if(isset($args[0])){
