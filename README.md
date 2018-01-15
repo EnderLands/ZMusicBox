@@ -1,34 +1,36 @@
 # ZMusicBox
-Just play music in your server~
+Play music in your server using noteblocks!
 
 
-_Requirements:_
+## Requirements
+ - The server software that you use must have working noteblock functionality (All current php server softwares)
+ - Noteblocks must be placed in the server
+ - Songs must be in .nbs format in order to be played
 
-The server software you use must play the noteblock sound when you tap it
+## How to use
+1) Place the phar in your plugins folder of the server
+2) Run the server
+3) Stop the server
+4) Place .nbs files in the /plugins/songs directory of the server
+5) Run the server
+6) Place a noteblock
 
+## Commands
 
-_How to use:_
+ - /music <start|stop|next>
 
-1) You have to add .nbs files in the songs folder inside your plugins folder
-2) Place a noteblock
-
-
-_Commands:_
-
-/music <start|stop|next>
-
-
+## API
 ZMusicBox is also accessible from its API:
+ - Switch to the Next Song
+```php
+$this->ZMusicBox->StartNewTask();
+```
+ - Stop the music
+```php
+$this->getServer()->ZMusicBox->getScheduler()->cancelTasks($this);
+```
 
-$this->ZMusicBox->StartNewTask();   -   Switch to the Next Song
-
-$this->getServer()->ZMusicBox->getScheduler()->cancelTasks($this);   -   Stop the Music
-
-
-_Tips:_
-
-You should use Minecraft Note Block Studio to convert midi files into nbs files.
+## Other Information
+ - Use Minecraft Note Block Studio to convert midi files into nbs files.
 Website: http://www.stuffbydavid.com/mcnbs
-
-
-Please do not use the internal code and algorithms to other plugins
+ - Please do not use this code nor these algorithms for other plugins
