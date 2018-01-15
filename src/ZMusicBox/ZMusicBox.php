@@ -29,7 +29,7 @@ class ZMusicBox extends PluginBase implements Listener{
 	public $name;
 	
 	public function onEnable(){
-		$this->getLogger()->info("ZMusicBox is loading!");
+		$this->getLogger()->info("ZMusicBox v3.0.0 is loading!");
 		$this->getServer()->getPluginManager()->registerEvents($this, $this);
 		if(!is_dir($this->getPluginDir())){
 			@mkdir($this->getServer()->getDataPath()."plugins/songs");
@@ -49,11 +49,13 @@ class ZMusicBox extends PluginBase implements Listener{
 				if(isset($args[0])){
 					switch($args[0]){
 						case "next":
+						case "skip":
 							$this->StartNewTask();
 							$sender->sendMessage(TextFormat::GREEN."Switched to next song");
 							return true;
 							break;
 						case "stop":
+						case "pause":
 							if($sender->isOp()){
 								$this->getServer()->getScheduler()->cancelTasks($this);
 								$sender->sendMessage(TextFormat::GREEN."Song Stopped");
@@ -63,6 +65,8 @@ class ZMusicBox extends PluginBase implements Listener{
 							return true;
 							break;	
 						case "start":
+						case "begin":
+						case "resume":
 							if($sender->isOp()){
 								$this->StartNewTask();
 								$sender->sendMessage(TextFormat::GREEN."Song Started");
@@ -74,9 +78,11 @@ class ZMusicBox extends PluginBase implements Listener{
 					}
 				}else{
 					$sender->sendMessage(TextFormat::RED."Usage:/music <start|stop|next>");
+					return bool;
 				}
 			break;		
 		}
+		return false;
 	}
 	
 	public function CheckMusic(){
@@ -194,14 +200,15 @@ class ZMusicBox extends PluginBase implements Listener{
 						$pk->x = $block->x;
 						$pk->y = $block->y;
 						$pk->z = $block->z;
-						$pk->case1 = $type;
-						$pk->case2 = $sound;
+						$pk->eventType = $type;
+						$pk->eventData = $sound;
 						$p->dataPacket($pk);
 						$pk = new LevelSoundEventPacket();
 						$pk->sound = LevelSoundEventPacket::SOUND_NOTE;
-						$pk->x = $block->x;
+						/*$pk->x = $block->x;
 						$pk->y = $block->y;
-						$pk->z = $block->z;
+						$pk->z = $block->z;*/
+						$pk->position = new Vector3($block->x, $block->y, $block->z);
 						$pk->volume = $type;
 						$pk->pitch = $sound;
 						$pk->unknownBool = true;
@@ -233,7 +240,7 @@ class MusicPlayer extends PluginTask{
         $this->plugin = $plugin;
     }
 	
-	public function onRun($CT){
+	public function onRun(int $CT){
 		if(isset($this->plugin->song->sounds[$this->plugin->song->tick])){
 			$i = 0;
 			foreach($this->plugin->song->sounds[$this->plugin->song->tick] as $data){
