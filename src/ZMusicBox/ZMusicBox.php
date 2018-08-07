@@ -8,7 +8,8 @@ use pocketmine\plugin\PluginBase;
 use pocketmine\event\Listener;
 use pocketmine\level;
 use pocketmine\Server;
-use pocketmine\scheduler\PluginTask;
+use pocketmine\scheduler\Task;
+use pocketmine\scheduler\TaskScheduler;
 use pocketmine\utils\Config;
 use pocketmine\utils\TextFormat;
 use pocketmine\network\mcpe\protocol\BlockEventPacket;
@@ -57,7 +58,7 @@ class ZMusicBox extends PluginBase implements Listener{
 						case "stop":
 						case "pause":
 							if($sender->isOp()){
-								$this->getServer()->getScheduler()->cancelTasks($this);
+								$this->getScheduler()->cancelAllTasks($this);
 								$sender->sendMessage(TextFormat::GREEN."Song Stopped");
 							}else{
 								$sender->sendMessage(TextFormat::RED."No Permission");
@@ -226,17 +227,16 @@ class ZMusicBox extends PluginBase implements Listener{
 	
 	public function StartNewTask(){
 		$this->song = $this->getRandomMusic();
-		$this->getServer()->getScheduler()->cancelTasks($this);
+		$this->getScheduler()->cancelAllTasks($this);
 		$this->MusicPlayer = new MusicPlayer($this);
-		$this->getServer()->getScheduler()->scheduleRepeatingTask($this->MusicPlayer, 2990 / $this->song->speed );
+		$this->getScheduler()->scheduleRepeatingTask($this->MusicPlayer, 2990 / $this->song->speed );
 	}
 	
 }
 
-class MusicPlayer extends PluginTask{
+class MusicPlayer extends Task{
 
     public function __construct(ZMusicBox $plugin){
-        parent::__construct($plugin);
         $this->plugin = $plugin;
     }
 	
