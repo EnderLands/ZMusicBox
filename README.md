@@ -23,11 +23,11 @@ Play music in your server using noteblocks!
 ZMusicBox is also accessible from its API:
  - Switch to the Next Song
 ```php
-$this->ZMusicBox->StartNewTask();
+$this->getServer()->getPluginBase()->getPlugin("ZMusicBox")->StartNewTask();
 ```
  - Stop the music
 ```php
-$this->getServer()->ZMusicBox->getScheduler()->cancelTasks($this);
+$this->getServer()->getPluginBase()->getPlugin("ZMusicBox")->getScheduler()->cancelAllTasks($this->getServer()->getPluginBase()->getPlugin("ZMusicBox"));
 ```
 
 ## Other Information
