@@ -23,8 +23,8 @@ use pocketmine\level\format\Chunk;
 use pocketmine\level\format\FullChunk;
 use pocketmine\utils\BinaryStream;
 use pocketmine\utils\Binary;
-use ZMusicBox\Command\MusicCommand;
-use ZMusicBox\Task\MusicPlayer;
+use ZMusicBox\command\MusicCommand;
+use ZMusicBox\task\MusicPlayer;
 use ZMusicBox\NoteBoxAPI;
 
 class ZMusicBox extends PluginBase implements Listener {
