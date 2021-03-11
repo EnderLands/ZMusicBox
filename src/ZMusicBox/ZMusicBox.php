@@ -10,6 +10,7 @@ use pocketmine\event\Listener;
 use pocketmine\level;
 use pocketmine\Server;
 use pocketmine\scheduler\TaskScheduler;
+use pocketmine\permission\Permission;
 use pocketmine\utils\Config;
 use pocketmine\utils\TextFormat;
 use pocketmine\network\mcpe\protocol\BlockEventPacket;
@@ -22,6 +23,7 @@ use pocketmine\level\format\Chunk;
 use pocketmine\level\format\FullChunk;
 use pocketmine\utils\BinaryStream;
 use pocketmine\utils\Binary;
+use ZMusicBox\Command\MusicCommand;
 use ZMusicBox\Task\MusicPlayer;
 use ZMusicBox\NoteBoxAPI;
 
@@ -34,6 +36,11 @@ class ZMusicBox extends PluginBase implements Listener {
     public function onEnable() {
         // $this->getLogger()->info("ZMusicBox is loading!");
         $this->getServer()->getPluginManager()->registerEvents($this, $this);
+        $this->getServer()->getPluginManager()->addPermission(new Permission("ZMusicBox.music", "ZMusicBox Commands", Permission::DEFAULT_TRUE));
+        $this->getServer()->getPluginManager()->addPermission(new Permission("ZMusicBox.skip", "Skips music", Permission::DEFAULT_TRUE));
+        $this->getServer()->getPluginManager()->addPermission(new Permission("ZMusicBox.stop", "Stops music", Permission::DEFAULT_OP));
+        $this->getServer()->getPluginManager()->addPermission(new Permission("ZMusicBox.start", "Starts music", Permission::DEFAULT_OP));
+        $this->getServer()->getCommandMap()->register("music", new MusicCommand($this));
         if (!is_dir($this->getPluginDir())) {
             @mkdir($this->getServer()->getDataPath() . "plugins/songs");
         }
@@ -44,45 +51,6 @@ class ZMusicBox extends PluginBase implements Listener {
             $this->startTask();
         }
         // $this->getLogger()->info("ZMusicBox loaded");
-    }
-
-    public function onCommand(CommandSender $sender, Command $command, string $label, array $args) : bool {
-        switch ($command->getName()) {
-            case "music":
-                if (isset($args[0])) {
-                    switch ($args[0]) {
-                        case "next":
-                        case "skip":
-                            $this->startTask();
-                            $sender->sendMessage(TextFormat::GREEN."Switched to next song");
-                            return true;
-                        case "stop":
-                        case "pause":
-                            if ($sender->isOp()) {
-                                $this->getScheduler()->cancelAllTasks($this);
-                                $sender->sendMessage(TextFormat::GREEN."Song Stopped");
-                            } else {
-                                $sender->sendMessage(TextFormat::RED."No Permission");
-                            }
-                            return true;
-                        case "start":
-                        case "begin":
-                        case "resume":
-                            if ($sender->isOp()) {
-                                $this->startTask();
-                                $sender->sendMessage(TextFormat::GREEN."Song Started");
-                            } else {
-                                $sender->sendMessage(TextFormat::RED."No Permission");
-                            }
-                            return true;
-                    }
-                } else {
-                    $sender->sendMessage(TextFormat::RED . "Usage:/music <start|stop|next>");
-                    return false;
-                }
-            break;
-        }
-        return false;
     }
 
     public function checkMusic() {
