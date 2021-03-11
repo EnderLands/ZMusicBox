@@ -1,6 +1,7 @@
 # ZMusicBox
 Play music in your PocketMine-MP server using noteblocks!
 
+This plugin is forked from **[SirGamer/ZMusicBox](https://github.com/SirGamer/ZMusicBox)**.
 
 ## Requirements
  - The server software that you use must have working Noteblock functionality
