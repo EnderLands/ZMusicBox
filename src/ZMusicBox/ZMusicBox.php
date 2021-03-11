@@ -189,7 +189,7 @@ class ZMusicBox extends PluginBase implements Listener {
 
     public function startTask() {
         $this->song = $this->getRandomMusic();
-        $this->getScheduler()->cancelAllTasks($this);
+        $this->getScheduler()->cancelAllTasks();
         $this->musicPlayer = new MusicPlayer($this);
         $this->getScheduler()->scheduleRepeatingTask($this->musicPlayer, 2990 / $this->song->speed);
     }
