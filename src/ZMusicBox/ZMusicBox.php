@@ -178,9 +178,9 @@ class ZMusicBox extends PluginBase implements Listener {
                 $noteblock1 = $noteblock;
                 if (!empty($noteblock)) {
                     if ($this->song->name != "") {
-                        $player->sendPopup(TextFormat::BLUE . "|->§6Now Playing: " . TextFormat::GREEN . $this->song->name . TextFormat::BLUE . "<-|");
+                        $player->sendPopup(TextFormat::BLUE . "|->" . TextFormat::GOLD . "Now Playing: " . TextFormat::GREEN . $this->song->name . TextFormat::BLUE . "<-|");
                     } else {    
-                        $player->sendPopup(TextFormat::BLUE . "|->§6Now Playing: " . TextFormat::GREEN . $this->name . TextFormat::BLUE . "<-|");
+                        $player->sendPopup(TextFormat::BLUE . "|->" . TextFormat::GOLD . "Now Playing: " . TextFormat::GREEN . $this->name . TextFormat::BLUE . "<-|");
                     }
                     $i = 0;
                     while ($i < $blo) {
