@@ -1,6 +1,6 @@
 <?php
 
-namespace ZMusicBox\Command;
+namespace ZMusicBox\command;
 
 use pocketmine\command\Command;
 use pocketmine\command\CommandSender;
