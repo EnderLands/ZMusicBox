@@ -40,7 +40,7 @@ class NoteBoxAPI {
         $this->getInt();
         $this->getInt();
         $this->getString();
-         $tick = $this->getShort() - 1;
+        $tick = $this->getShort() - 1;
         while (true) {
             $sounds = [];
             $this->getShort();
