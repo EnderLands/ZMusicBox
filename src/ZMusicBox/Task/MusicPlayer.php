@@ -7,6 +7,8 @@ use ZMusicBox\ZMusicBox;
 
 class MusicPlayer extends Task {
 
+    private $plugin;
+
     public function __construct(ZMusicBox $plugin) {
         $this->plugin = $plugin;
     }
