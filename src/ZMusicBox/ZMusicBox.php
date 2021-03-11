@@ -35,6 +35,7 @@ class ZMusicBox extends PluginBase implements Listener {
 
     public function onEnable() {
         // $this->getLogger()->info("ZMusicBox is loading!");
+        // $this->getLogger()->info("ZMusicBox loaded");
         $this->getServer()->getPluginManager()->registerEvents($this, $this);
         $this->getServer()->getPluginManager()->addPermission(new Permission("ZMusicBox.music", "ZMusicBox Commands", Permission::DEFAULT_TRUE));
         $this->getServer()->getPluginManager()->addPermission(new Permission("ZMusicBox.skip", "Skips music", Permission::DEFAULT_TRUE));
@@ -50,7 +51,6 @@ class ZMusicBox extends PluginBase implements Listener {
         } else {
             $this->startTask();
         }
-        // $this->getLogger()->info("ZMusicBox loaded");
     }
 
     public function checkMusic() {
