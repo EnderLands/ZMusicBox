@@ -24,14 +24,14 @@ This plugin is forked from **[SirGamer/ZMusicBox](https://github.com/SirGamer/ZM
 ZMusicBox is also accessible from its API:
  - Switch to the Next Song
 ```php
-$this->getServer()->getPluginBase()->getPlugin("ZMusicBox")->StartNewTask();
+$this->getServer()->getPluginBase()->getPlugin("ZMusicBox")->startTask();
 ```
  - Stop the music
 ```php
-$this->getServer()->getPluginBase()->getPlugin("ZMusicBox")->getScheduler()->cancelAllTasks($this->getServer()->getPluginBase()->getPlugin("ZMusicBox"));
+$this->getServer()->getPluginBase()->getPlugin("ZMusicBox")->getScheduler()->cancelAllTasks();
 ```
 
 ## Other Information
  - Use Minecraft Note Block Studio to convert midi files into nbs files.
-Website: http://www.stuffbydavid.com/mcnbs
+Website: https://www.stuffbydavid.com/mcnbs
  - Please do not use this code nor these algorithms for other plugins
