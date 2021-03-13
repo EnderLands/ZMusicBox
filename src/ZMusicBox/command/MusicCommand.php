@@ -57,8 +57,8 @@ class MusicCommand extends Command implements PluginIdentifiableCommand {
                 case "begin":
                 case "resume":
                     if ($sender->hasPermission("ZMusicBox.start")) {
-                        $this->plugin->startTask();
                         $sender->sendMessage(TextFormat::GREEN . "Song Started");
+                        $this->plugin->startTask();
                     } else {
                         $sender->sendMessage(TextFormat::RED . "No Permission");
                     }
