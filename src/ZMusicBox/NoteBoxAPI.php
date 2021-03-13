@@ -109,4 +109,8 @@ class NoteBoxAPI {
         return $this->get(unpack("I", $this->get(4))[1]);
     }
 
+    public function getTick() {
+        return $this->tick;
+    }
+
 }
