@@ -14,15 +14,15 @@ class MusicPlayer extends Task {
     }
 
     public function onRun(int $currentTick) {
-        if (isset($this->plugin->song->sounds[$this->plugin->song->tick])) {
+        if (isset($this->plugin->song->sounds[$this->plugin->song->getTick()])) {
             $i = 0;
             foreach ($this->plugin->song->sounds[$this->plugin->song->tick] as $data) {
                 $this->plugin->play($data[0], $data[1], $i);
                 $i++;
             }
         }
-        $this->plugin->song->tick++;
-        if ($this->plugin->song->tick > $this->plugin->song->length) {
+        $this->plugin->song->getTick()++;
+        if ($this->plugin->song->getTick() > $this->plugin->song->length) {
             $this->plugin->startTask();
         }
     }
