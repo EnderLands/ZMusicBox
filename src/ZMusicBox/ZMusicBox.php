@@ -30,8 +30,8 @@ use ZMusicBox\NoteBoxAPI;
 class ZMusicBox extends PluginBase implements Listener {
 
     public $song;
-    public $musicPlayer;
     public $name;
+    // public $musicPlayer;
 
     public function onEnable() {
         // $this->getLogger()->info("ZMusicBox is loading!");
@@ -190,8 +190,8 @@ class ZMusicBox extends PluginBase implements Listener {
     public function startTask() {
         $this->song = $this->getRandomMusic();
         $this->getScheduler()->cancelAllTasks();
-        $this->musicPlayer = new MusicPlayer($this);
-        $this->getScheduler()->scheduleRepeatingTask($this->musicPlayer, 2990 / $this->song->speed);
+        // $this->musicPlayer = new MusicPlayer($this);
+        $this->getScheduler()->scheduleRepeatingTask(new MusicPlayer($this), 2990 / $this->song->speed);
     }
 
 }
