@@ -13,7 +13,7 @@ class NoteBoxAPI {
     public $plugin;
     public $length;
     public $sounds = [];
-    public $tick = 0;
+    public $tick;
     public $buffer;
     public $offset = 0;
     public $name;
