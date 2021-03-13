@@ -59,17 +59,17 @@ class ZMusicBox extends PluginBase implements Listener {
     }
 
     public function getDirCount($path) {
-              $num = sizeof(scandir($path));
-              $num = ($num>2)?$num-2:0;
+        $num = sizeof(scandir($path));
+        $num = ($num>2)?$num-2:0;
         return $num;
     }
 
     public function getPluginDir() {
-        return $this->getServer()->getDataPath() . "plugins/songs/";
+        return $this->getDataFolder() . "/songs/";
     }
 
     public function getRandomMusic() {
-        $dir = $this->randomFile($this->getDataFolder() . "/songs", "nbs");
+        $dir = $this->randomFile($this->getDataFolder() . "/songs/", "nbs");
         if ($dir) {
             $api = new NoteBoxAPI($this, $dir);
             return $api;
