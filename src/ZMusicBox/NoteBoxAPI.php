@@ -2,6 +2,8 @@
 
 namespace ZMusicBox;
 
+use ZMusicBox\ZMusicBox;
+
 class NoteBoxAPI {
 
     const INSTRUMENT_PIANO = 0;
@@ -19,7 +21,7 @@ class NoteBoxAPI {
     public $name;
     public $speed;
 
-    public function __construct($plugin, $path) {
+    public function __construct(ZMusicBox $plugin, string $path) {
         $this->plugin = $plugin;
         $fopen = fopen($path, "r");
         $this->buffer = fread($fopen, filesize($path));
