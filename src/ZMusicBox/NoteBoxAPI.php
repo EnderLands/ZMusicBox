@@ -81,6 +81,7 @@ class NoteBoxAPI {
                 break;
             }
         }
+        $this->tick = $tick;
     }
 
     public function get($len) {
