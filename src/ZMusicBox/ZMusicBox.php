@@ -69,7 +69,7 @@ class ZMusicBox extends PluginBase implements Listener {
     }
 
     public function getRandomMusic() {
-        $dir = $this->randomFile($this->getPluginDir(), "nbs");
+        $dir = $this->randomFile($this->getDataFolder() . "/songs", "nbs");
         if ($dir) {
             $api = new NoteBoxAPI($this, $dir);
             return $api;
