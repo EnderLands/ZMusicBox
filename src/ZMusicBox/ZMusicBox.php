@@ -43,7 +43,7 @@ class ZMusicBox extends PluginBase implements Listener {
         $this->getServer()->getPluginManager()->addPermission(new Permission("ZMusicBox.start", "Starts music", Permission::DEFAULT_OP));
         $this->getServer()->getCommandMap()->register("music", new MusicCommand($this));
         if (!is_dir($this->getPluginDir())) {
-            @mkdir($this->getServer()->getDataPath() . "plugins/songs");
+            @mkdir($this->->getDataFolder() . "/songs");
         }
         $this->getServer()->getPluginManager()->registerEvents($this, $this);
         if (!$this->checkMusic()) {
