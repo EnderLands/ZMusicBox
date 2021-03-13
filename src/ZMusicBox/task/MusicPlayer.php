@@ -21,7 +21,7 @@ class MusicPlayer extends Task {
                 $i++;
             }
         }
-        $this->plugin->song->getTick()++;
+        $this->plugin->song->tick++;
         if ($this->plugin->song->getTick() > $this->plugin->song->length) {
             $this->plugin->startTask();
         }
