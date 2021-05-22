@@ -14,9 +14,9 @@ class MusicPlayer extends Task {
     }
 
     public function onRun(int $currentTick) {
-        if (isset($this->plugin->song->sounds[$this->plugin->song->getTick()])) {
+        if (isset($this->plugin->song->sounds[$this->plugin->song->tick])) {
             $i = 0;
-            foreach ($this->plugin->song->sounds[$this->plugin->song->getTick()] as $data) {
+            foreach ($this->plugin->song->sounds[$this->plugin->song->tick] as $data) {
                 $this->plugin->play($data[0], $data[1], $i);
                 $i++;
             }
