@@ -69,49 +69,21 @@ class ZMusicBox extends PluginBase implements Listener {
     }
 
     public function getRandomMusic() {
-        $dir = $this->randomFile($this->getDataFolder() . "/songs/", "nbs");
+        $dir = $this->randomFile($this->getDataFolder() . "/songs/", ".nbs");
         if ($dir) {
             $api = new NoteBoxAPI($this, $dir);
             return $api;
         }
-        return false;
+        return null;
     }
 
-    public function randomFile($folder = "", $extensions = ".*") {
-        $folder = trim($folder);
-        $folder = ($folder == '') ? './' : $folder;
-        if (!is_dir($folder)) {
-            return false;
-        }
-        $files = [];
-        if ($dir = @opendir($folder)) {
-            while ($file = readdir($dir)) {
-                if (!preg_match('/^\.+$/', $file) && preg_match('/\.(' . $extensions . ')$/', $file)) {
-                    $files[] = $file;        
-                }
-            }
-            closedir($dir);  
-        } else {
-            return false;
-        }
-        if (count($files) == 0) {
-            return false;
-        }
-        mt_srand((double) microtime() * 1000000);
-        $rand = mt_rand(0, count($files) - 1);
-        if (!isset($files[$rand])) {
-            return false;
-        }
-        if (function_exists("iconv")) {
-            $rname = iconv('gbk','UTF-8', $files[$rand]);
-        } else {
-            $rname = $files[$rand];
-        }
-        $this->name = str_replace('.nbs', "", $rname);
-        return $folder . $files[$rand];
+    public function randomFile($folder, $extension) {
+        $files = glob($folder . "/*" . $extension);
+        $index = array_rand($files);
+        return $files[$index];
     }
 
-    public function getNearbyNoteBlock($x,$y,$z,$world) {
+    public function getNearbyNoteBlock($x, $y, $z, $world) {
         $nearby = [];
         $minX = $x - 5;
         $maxX = $x + 5;    
@@ -124,7 +96,7 @@ class ZMusicBox extends PluginBase implements Listener {
                 for ($z = $minZ; $z <= $maxZ; ++$z) {
                     $vector = new Vector3($x, $y, $z);
                     $block = $world->getBlock($vector);
-                    if ($block->getID() == 25) {
+                    if ($block->getId() == 25) {
                         $nearby[] = $block;
                     }
                 }
@@ -189,7 +161,12 @@ class ZMusicBox extends PluginBase implements Listener {
         $this->song = $this->getRandomMusic();
         $this->getScheduler()->cancelAllTasks();
         // $this->musicPlayer = new MusicPlayer($this);
-        $this->getScheduler()->scheduleRepeatingTask(new MusicPlayer($this), 2990 / $this->song->speed);
+        if ($this->song !== null) {
+            $this->getScheduler()->scheduleRepeatingTask(new MusicPlayer($this), 2990 / $this->song->speed);
+        } else {
+            $this->getLogger()->error("Failed to play current song. Skipping to next song.");
+            $this->startTask();
+        }
     }
 
 }
