@@ -2,6 +2,7 @@
 
 namespace ZMusicBox;
 
+use pocketmine\block\BlockIds;
 use pocketmine\command\Command;
 use pocketmine\command\CommandExecutor;
 use pocketmine\command\CommandSender;
@@ -60,7 +61,7 @@ class ZMusicBox extends PluginBase implements Listener {
 
     public function getDirCount($path) {
         $num = sizeof(scandir($path));
-        $num = ($num>2)?$num-2:0;
+        $num = ($num > 2) ? $num - 2 : 0;
         return $num;
     }
 
@@ -96,7 +97,7 @@ class ZMusicBox extends PluginBase implements Listener {
                 for ($z = $minZ; $z <= $maxZ; ++$z) {
                     $vector = new Vector3($x, $y, $z);
                     $block = $world->getBlock($vector);
-                    if ($block->getId() == 25) {
+                    if ($block->getId() == BlockIds::NOTEBLOCK) {
                         $nearby[] = $block;
                     }
                 }
