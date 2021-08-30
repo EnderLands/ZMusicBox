@@ -182,7 +182,7 @@ class ZMusicBox extends PluginBase implements Listener {
     public function selectSong(string $name) {
         foreach (glob($this->getDataFolder() . "/songs/*.nbs") as $file) {
             if (strtolower(explode(".nbs", basename($file, ".nbs"))[0]) === strtolower($name)) {
-                this->getScheduler()->cancelAllTasks($this->taskId);
+                $this->getScheduler()->cancelTask($this->taskId);
                 $song = new NoteBoxAPI($this, $file);
                 $task = new MusicPlayer($this, $song);
                 $this->taskId = $task->getTaskId();
