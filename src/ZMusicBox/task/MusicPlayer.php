@@ -3,26 +3,29 @@
 namespace ZMusicBox\task;
 
 use pocketmine\scheduler\Task;
+use ZMusicBox\NoteBoxAPI;
 use ZMusicBox\ZMusicBox;
 
 class MusicPlayer extends Task {
 
     private $plugin;
+    private $api;
 
-    public function __construct(ZMusicBox $plugin) {
+    public function __construct(ZMusicBox $plugin, NoteBoxAPI $api) {
         $this->plugin = $plugin;
+        $this->api = $api;
     }
 
     public function onRun(int $currentTick) {
-        if (isset($this->plugin->song->sounds[$this->plugin->song->tick])) {
+        if (isset($this->api->sounds[$this->api->tick])) {
             $i = 0;
-            foreach ($this->plugin->song->sounds[$this->plugin->song->tick] as $data) {
-                $this->plugin->play($data[0], $data[1], $i);
+            foreach ($this->api->sounds[$this->api->tick] as $data) {
+                $this->plugin->play($this->api, $data[0], $data[1], $i);
                 $i++;
             }
         }
-        $this->plugin->song->tick++;
-        if ($this->plugin->song->getTick() > $this->plugin->song->length) {
+        $this->api->tick++;
+        if ($this->api->getTick() > $this->api->length) {
             $this->plugin->startTask();
         }
     }

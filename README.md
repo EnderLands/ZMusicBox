@@ -12,7 +12,7 @@ This plugin is forked from **[SirGamer/ZMusicBox](https://github.com/SirGamer/ZM
 1) Place the `.phar` file in your plugins folder of the server
 2) Run the server
 3) Stop the server
-4) Place .nbs files in the /plugins/songs directory of the server
+4) Place `.nbs` files in the `/plugins/songs` directory of the server
 5) Run the server
 6) Place a noteblock
 
@@ -22,16 +22,26 @@ This plugin is forked from **[SirGamer/ZMusicBox](https://github.com/SirGamer/ZM
 
 ## API
 ZMusicBox is also accessible from its API:
+- Get Instance (both of the following would work)
+```php
+$instance = ZMusicBox\ZMusicBox::getInstance();
+
+$instance = $this->getServer()->getPluginBase()->getPlugin("ZMusicBox");
+```
  - Switch to the Next Song
 ```php
-$this->getServer()->getPluginBase()->getPlugin("ZMusicBox")->startTask();
+$instance->startTask();
 ```
  - Stop the music
 ```php
-$this->getServer()->getPluginBase()->getPlugin("ZMusicBox")->getScheduler()->cancelAllTasks();
+$instance->getScheduler()->cancelAllTasks();
+```
+- Select songs
+```php
+$instance->selectSong("Exmaple song");
 ```
 
 ## Other Information
- - Use Minecraft Note Block Studio to convert midi files into nbs files.
-Website: https://www.stuffbydavid.com/mcnbs
+ - Use Minecraft Note Block Studio to convert `.midi` files into `.nbs` files.
+Website: https://opennbs.org/
  - Please do not use this code nor these algorithms for other plugins

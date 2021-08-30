@@ -2,6 +2,7 @@
 
 namespace ZMusicBox;
 
+use ZMusicBox\elements\Layer;
 use ZMusicBox\ZMusicBox;
 
 class NoteBoxAPI {
@@ -23,10 +24,18 @@ class NoteBoxAPI {
 
     public function __construct(ZMusicBox $plugin, string $path) {
         $this->plugin = $plugin;
+        $layerMap = [];
         $fopen = fopen($path, "r");
         $this->buffer = fread($fopen, filesize($path));
         fclose($fopen);
         $this->length = $this->getShort();
+        if ($this->length == 0) {
+            $nbsVersion = $this->getByte();
+            $firstCustomInstrument = $this->getByte();
+            if ($nbsVersion >= 3) {
+                $this->length = $this->getShort();
+            }
+        }
         $height = $this->getShort();
         $this->name = $this->getString();
         $this->getString();
@@ -42,11 +51,21 @@ class NoteBoxAPI {
         $this->getInt();
         $this->getInt();
         $this->getString();
-        $this->tick = $this->getShort() - 1;
+        $tick = -1;
         while (true) {
             $sounds = [];
-            $this->getShort();
+            $jumpTicks = $this->getShort();
+            if ($jumpTicks == 0) {
+                break;
+            }
+            $tick += $jumpTicks;
+            $layer = -1;
             while (true) {
+                $jumpLayers = $this->getShort();
+                if ($jumpLayers == 0) {
+                    break;
+                }
+                $layer += $jumpLayers;
                 switch ($this->getByte()) {
                     case 1: // BASS
                         $type = self::INSTRUMENT_BASS;
@@ -76,9 +95,9 @@ class NoteBoxAPI {
                     break;
                 }
             }
-            $this->sounds[$this->tick] = $sounds;
+            $this->sounds[$tick] = $sounds;
             if (($jump = $this->getShort()) !== 0) {
-                $this->tick += $jump;
+                $tick += $jump;
             } else {
                 break;
             }
