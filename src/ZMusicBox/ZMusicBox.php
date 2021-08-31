@@ -156,6 +156,9 @@ class ZMusicBox extends PluginBase implements Listener {
     }
 
     public function startTask() {
+        if (!$this->checkMusic()) {
+            return;
+        }
         if ($this->taskId !== 0) {
             $this->getScheduler()->cancelTask($this->taskId);
         }
@@ -180,6 +183,9 @@ class ZMusicBox extends PluginBase implements Listener {
     }
 
     public function selectSong(string $name) {
+        if (!$this->checkMusic()) {
+            return;
+        }
         foreach (glob($this->getDataFolder() . "/songs/*.nbs") as $file) {
             if (strtolower(explode(".nbs", basename($file, ".nbs"))[0]) === strtolower($name)) {
                 $this->getScheduler()->cancelTask($this->taskId);
