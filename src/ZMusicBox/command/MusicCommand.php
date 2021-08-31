@@ -42,8 +42,12 @@ class MusicCommand extends Command implements PluginIdentifiableCommand {
             case "next":
             case "skip":
                 if ($sender->hasPermission("ZMusicBox.skip")) {
-                    $this->plugin->startTask();
-                    $sender->sendMessage(TextFormat::GREEN . "Switched to next song");
+                    if (!$this->plugin->checkMusic()) {
+                        $this->plugin->startTask();
+                        $sender->sendMessage(TextFormat::GREEN . "Switched to next song");
+                    } else {
+                        $sender->sendMessage(TextFormat::RED . "No songs are available right now");
+                    }
                 } else {
                     $sender->sendMessage(TextFormat::RED . "No Permission");
                 }
@@ -62,14 +66,22 @@ class MusicCommand extends Command implements PluginIdentifiableCommand {
             case "begin":
             case "resume":
                 if ($sender->hasPermission("ZMusicBox.start")) {
-                    $sender->sendMessage(TextFormat::GREEN . "Song Started");
-                    $this->plugin->startTask();
+                    if ($this->plugin->checkMusic()) {
+                        $sender->sendMessage(TextFormat::GREEN . "Song Started");
+                        $this->plugin->startTask();
+                    } else {
+                        $sender->sendMessage(TextFormat::RED . "No songs are available right now");
+                    }
                 } else {
                     $sender->sendMessage(TextFormat::RED . "No Permission");
                 }
                 break;
             case "select":
                 if ($sender->hasPermission("ZMusicBox.select")) {
+                    if (!$this->plugin->checkMusic()) {
+                        $sender->sendMessage(TextFormat::RED . "No songs are available right now");
+                        return;
+                    }
                     if (!isset($args[1])) {
                         $sender->sendMessage(TextFormat::RED . "Please enter a song name");
                         return;
