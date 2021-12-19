@@ -2,28 +2,16 @@
 
 namespace ZMusicBox;
 
-use pocketmine\block\BlockIds;
-use pocketmine\command\Command;
-use pocketmine\command\CommandExecutor;
-use pocketmine\command\CommandSender;
+use pocketmine\block\BlockLegacyIds;
 use pocketmine\plugin\PluginBase;
 use pocketmine\event\Listener;
-use pocketmine\level;
-use pocketmine\Server;
-use pocketmine\scheduler\TaskScheduler;
+use pocketmine\permission\PermissionManager;
 use pocketmine\permission\Permission;
-use pocketmine\utils\Config;
 use pocketmine\utils\TextFormat;
 use pocketmine\network\mcpe\protocol\BlockEventPacket;
 use pocketmine\network\mcpe\protocol\LevelSoundEventPacket;
-use pocketmine\Player;
-use pocketmine\math\AxisAlignedBB;
+use pocketmine\player\Player;
 use pocketmine\math\Vector3;
-use pocketmine\math\Math;
-use pocketmine\level\format\Chunk;
-use pocketmine\level\format\FullChunk;
-use pocketmine\utils\BinaryStream;
-use pocketmine\utils\Binary;
 use ZMusicBox\command\MusicCommand;
 use ZMusicBox\task\MusicPlayer;
 use ZMusicBox\NoteBoxAPI;
@@ -50,9 +38,10 @@ class ZMusicBox extends PluginBase implements Listener {
     }
 
     public function registerPermissions() {
-        $this->getServer()->getPluginManager()->addPermission(new Permission("ZMusicBox.music", "ZMusicBox Commands", Permission::DEFAULT_TRUE));
-        $this->getServer()->getPluginManager()->addPermission(new Permission("ZMusicBox.stop", "Stops music", Permission::DEFAULT_OP));
-        $this->getServer()->getPluginManager()->addPermission(new Permission("ZMusicBox.start", "Starts music", Permission::DEFAULT_OP));
+        $permissionManager = PermissionManager::getInstance();
+        $permissionManager->addPermission(new Permission("ZMusicBox.music", "ZMusicBox Commands", Permission::DEFAULT_TRUE));
+        $permissionManager->addPermission(new Permission("ZMusicBox.stop", "Stops music", Permission::DEFAULT_OP));
+        $permissionManager->addPermission(new Permission("ZMusicBox.start", "Starts music", Permission::DEFAULT_OP));
     }
 
     public function checkMusic() {
@@ -101,7 +90,7 @@ class ZMusicBox extends PluginBase implements Listener {
                 for ($z = $minZ; $z <= $maxZ; ++$z) {
                     $vector = new Vector3($x, $y, $z);
                     $block = $world->getBlock($vector);
-                    if ($block->getId() == BlockIds::NOTEBLOCK) {
+                    if ($block->getId() === BlockLegacyIds::NOTEBLOCK) {
                         $nearby[] = $block;
                     }
                 }
