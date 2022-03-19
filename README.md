@@ -44,4 +44,3 @@ $instance->selectSong("Exmaple song");
 ## Other Information
  - Use Minecraft Note Block Studio to convert `.midi` files into `.nbs` files.
 Website: https://opennbs.org/
- - Please do not use this code nor these algorithms for other plugins
